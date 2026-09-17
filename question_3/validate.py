@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+import time
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$") # validating email
 
@@ -23,3 +24,4 @@ with open(shard_path, newline="") as f:
             invalid_count += 1
 
 print(f"shard_index={shard_idx} pod={pod_name} node={node_name} " f"total={total} invalid={invalid_count}")
+time.sleep(10) # to observe pods parallelism

@@ -6,7 +6,7 @@ spec:
   completions: 8
   parallelism: 4
   completionMode: Indexed
-  backoffLimit: 4
+  backoffLimit: 4 # failure limit if pod fails
   template:
     spec:
       restartPolicy: Never
