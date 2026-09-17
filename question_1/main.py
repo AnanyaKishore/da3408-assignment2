@@ -23,7 +23,7 @@ def load_model():
 def healthz():
     if model is None:
         return JSONResponse(content={"status": "loading"}, status_code=503)
-    return {"status": "ok"} # "version": "v2" added for question 4, not required for question 1
+    return {"status": "ok", "version": "v2"} # "version": "v2" to be added for question 4 v2 deployment, not needed for question 1
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
