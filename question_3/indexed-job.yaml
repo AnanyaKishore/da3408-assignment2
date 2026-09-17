@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: signup-shard-validation
+spec:
+  completions: 8
+  parallelism: 4
+  completionMode: Indexed
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: validator
+          image: shard-validator:v1
+          imagePullPolicy: Never # we load the image into the cluster nodes
+          resources:
+            requests:
+              cpu: "1"
+            limits:
+              cpu: "1"
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            # JOB_COMPLETION_INDEX is auto injected for indexed jobs
