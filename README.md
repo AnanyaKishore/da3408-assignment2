@@ -21,6 +21,7 @@ da3408-assignment2/
 │   ├── requirements-train.txt
 │   └── train.py
 ├── question_3/
+│   ├── shards/
 │   ├── Dockerfile
 │   ├── generate_shards.py
 │   ├── indexed-job.yaml
@@ -30,8 +31,10 @@ da3408-assignment2/
 │   └── service.yaml
 ├── .gitignore
 ├── AI_DISCLOSURE.md
-└── README.md
+├── README.md
+└── Report_DA3408_Assignment2.pdf
 ```
+The final report is **Report_DA3408_Assignment2.pdf**. All the required evidence and explanations can be found here.
 
 ## To run the experiments:
 
@@ -42,6 +45,10 @@ cd da3408-assignment2
 ---
 
 # Question 1
+
+Please note that both **Dockerfile.naive** and **Dockerfile.multistage** use **python:3.10-slim** to build their images. Using python:3.10 to build the naive image and python:3.10-slim to build the multi-stage image would unnecessarily inflate disk usage for the naive image **(2.09 GB)**, instead showing an artificially large **71.57%** reduction when packaged as a multi-stage image.
+
+Commands to rerun the experiment on your terminal:
 
 ```bash
 cd question_1
@@ -74,8 +81,8 @@ docker compose up -d
 docker compose ps
 docker compose logs -f api
 curl http://localhost:5000/healthz
-python3 evidence_script.py # script to show cache hit, cache miss and time effects
-# or, you can instead directly check from the terminal:
+python3 evidence_script.py # script to show cache hit, cache miss and time differences
+# we can also directly check from the terminal instead of running the script:
 time curl -s -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d '{"text":"WIN a FREE iPhone now! Click here: bit.ly/xyz123"}'
 time curl -s -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d '{"text":"WIN a FREE iPhone now! Click here: bit.ly/xyz123"}'
 time curl -s -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d '{"text":"Congrats! So proud of you!"}'
@@ -117,6 +124,7 @@ kubectl get svc spam-api-svc
 kubectl get pods -l app=spam-api
 kubectl delete pod spam-api-b7cddf48d-nqnlc # the pod I chose to delete
 kubectl get pods -l app=spam-api
+# add "version" :"v2" to the JSON response at question_1/main.py under the healthz() function
 docker build -t spam-multistage:v2 -f ../question_1/Dockerfile.multistage ../question_1
 minikube image load spam-multistage:v2
 kubectl set image deployment/spam-api spam-api=spam-multistage:v2
@@ -125,4 +133,5 @@ kubectl rollout history deployment/spam-api
 kubectl delete -f .
 ```
 ---
+
 Author: Ananya Kishore (DA24B035)
